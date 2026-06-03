@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorBridge - Le soutien scolaire et les langues sans frontières</title>
+    <style>
+        /* --- CONFIGURATION GLOBALE & VARIABLES --- */
+        :root {
+            --bg-dark: #0b132b;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --primary-accent: #2ecc71;
+            --blue-accent: #00d2ff;
+            --red-accent: #e74c3c;
+            --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            transition: direction 0.3s ease;
+        }
+
+        /* Support pour l'arabe (RTL) */
+        body[dir="rtl"] {
+            text-align: right;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; /* Focus mobile/tablette */
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 100;
+        }
+
+        body[dir="rtl"] header {
+            flex-direction: row-reverse;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--primary-accent);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        body[dir="rtl"] .header-actions {
+            flex-direction: row-reverse;
+        }
+
+        /* Lang Select */
+        .lang-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select option {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        /* Burger Icon */
+        .menu-burger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            width: 25px;
+        }
+
+        .menu-burger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Animation Burger Actif */
+        .menu-burger.open span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .menu-burger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-burger.open span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Overlay Menu Coulissant */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 19, 43, 0.98);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .nav-overlay a {
+            color: var(--text-main);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-overlay a:hover {
+            color: var(--primary-accent);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h1 span {
+            color: var(--primary-accent);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* --- BOUTONS --- */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-accent);
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- SECTION PILIERS --- */
+        .pillars-section {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .pillars-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .pillars-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .pillar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        body[dir="rtl"] .pillar-card {
+            text-align: right;
+        }
+
+        .pillar-icon {
+            margin-bottom: 16px;
+        }
+
+        .pillar-card h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .pillar-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- INTERFACE PASSERELLE --- */
+        .passerelle-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .passerelle-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .passerelle-section .subtitle {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .profile-selector {
+            margin-bottom: 25px;
+        }
+
+        .profile-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .profile-toggle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--primary-accent);
+            color: #000000;
+            border-color: var(--primary-accent);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        body[dir="rtl"] select.form-control {
+            background-position: left 16px center;
+        }
+
+        /* --- FOOTER & SIGNATURE --- */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .signature {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .signature stroke, .signature a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signature a:hover {
+            color: var(--blue-accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV OVERLAY (MENU BURGER CLOSURE) -->
+    <div class="nav-overlay" id="navOverlay">
+        <a href="#" class="nav-link-1" data-key="menu_home">Accueil</a>
+        <a href="#" class="nav-link-2" data-key="menu_programs">Nos Programmes</a>
+        <a href="#" class="nav-link-3" data-key="menu_about">À Propos</a>
+        <a href="#" class="nav-link-4" data-key="menu_contact">Contact</a>
+    </div>
+
+    <div class="container">
+        
+        <!-- HEADER -->
+        <header>
+            <div class="logo">Tutor<span>Bridge</span></div>
+            <div class="header-actions">
+                <select class="lang-select" id="langSelect">
+                    <option value="fr">FR</option>
+                    <option value="en">EN</option>
+                    <option value="ar">AR</option>
+                </select>
+                <div class="menu-burger" id="menuBurger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO SECTION -->
+        <main class="hero">
+            <h1 id="heroTitle">Le soutien scolaire et les langues, <span>sans frontières</span></h1>
+            <p id="heroDesc">Connectez-vous avec des tuteurs certifiés bilingues. Conçu pour fonctionner de manière fluide sur les réseaux à haut débit (Visioconférence standard) comme sur les réseaux à bande passante ultra-limitée (Appels et notes vocales WhatsApp).</p>
+            
+            <button class="btn btn-primary" id="btnMainCta">Commencer l'expérience</button>
+            <button class="btn btn-secondary" id="btnSecCta">Découvrir nos programmes</button>
+        </main>
+
+        <!-- PILIERS SECTION -->
+        <section class="pillars-section">
+            <h2 id="pillarsTitle">Trois Piliers Adaptés à Chaque Réalité</h2>
+            
+            <div class="pillars-grid">
+                
+                <!-- Pilier 1 : École en Ligne -->
+                <div class="pillar-card">
+                    <div class="pillar-icon">
+                        <svg viewBox="0 0 24 24" width="40" height="40" stroke="var(--blue-accent)" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            <path d="M2 12h20"></path>
+                        </svg>
+                    </div>
+                    <h3 id="p1Title">L'École en Ligne</h3>
+                    <p id="p1Desc">Un véritable cursus complet, structuré et interactif en langues et matières fondamentales. Une alternative robuste conçue pour les familles à la recherche d'un programme officiel et d'un suivi scolaire rigoureux.</p>
+                </div>
+
+                <!-- Pilier 2 : Soutien Scolaire -->
+                <div class="pillar-card">
+                    <div class="pillar-icon">
+                        <svg viewBox="0 0 24 24" width="40" height="40" stroke="var(--primary-accent)" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+                        </svg>
+                    </div>
+                    <h3 id="p2Title">Soutien Scolaire</h3>
+                    <p id="p2Desc">Un accompagnement ciblé et personnalisé après les cours pour surmonter les difficultés, consolider les bases académiques, préparer sereinement les examens et progresser à son propre rythme.</p>
+                </div>
+
+                <!-- Pilier 3 : Blog & Vlog -->
+                <div class="pillar-card">
+                    <div class="pillar-icon">
+                        <svg viewBox="0 0 24 24" width="40" height="40" stroke="var(--red-accent)" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 7l-7 5 7 5V7z"></path>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                    </div>
+                    <h3 id="p3Title">Blog & Vlog</h3>
+                    <p id="p3Desc">Contenus pédagogiques multimédias, capsules vidéos courtes et astuces d'apprentissage synchronisables en basse résolution pour rester accessibles partout et à tout moment.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PASSERELLE SECTION -->
+        <section class="passerelle-section">
+            <h2 id="formTitle">Rejoindre la Passerelle</h2>
+            <div class="subtitle" id="formSubtitle">Une interface unifiée. Dites-nous qui vous êtes, l'algorithme adapte instantanément vos options.</div>
+            
+            <form id="passerelleForm" onsubmit="event.preventDefault();">
+                
+                <div class="profile-selector">
+                    <span class="profile-label" id="labelProfile">Votre Profil</span>
+                    <div class="profile-toggle-grid">
+                        <button type="button" class="toggle-btn active" id="btnEleve">Je suis Élève / Parent</button>
+                        <button type="button" class="toggle-btn" id="btnEnseignant">Je souhaite Enseigner</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nomComplet" id="labelName">Nom Complet</label>
+                    <input type="text" id="nomComplet" class="form-control" placeholder="Ex: Thomas Martin" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact" id="labelContact">Adresse E-mail ou Numéro WhatsApp</label>
+                    <input type="text" id="contact" class="form-control" placeholder="Ex: +33 6 12 34 56 78" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="besoin" id="labelBesoin">Votre Besoin Prioritaire</label>
+                    <select id="besoin" class="form-control">
+                        <!-- Généré par JS dynamiquement selon la langue -->
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btnSubmitForm" style="margin-top: 10px; margin-bottom: 0;">Valider ma demande de mise en relation</button>
+            </form>
+        </section>
+
+        <!-- FOOTER & NEXUI SIGNATURE -->
+        <footer>
+            <div class="signature">
+                <span id="footerText">Créé par l'agence</span> <a href="https://www.nexui.agency/" target="_blank">NexUI</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- DICTIONNAIRE TRILINGUE & LOGIQUE APPLICATIVE -->
+    <script>
+        // 1. GESTION DU MENU BURGER
+        const menuBurger = document.getElementById('menuBurger');
+        const navOverlay = document.getElementById('navOverlay');
+
+        menuBurger.addEventListener('click', () => {
+            menuBurger.classList.toggle('open');
+            navOverlay.classList.toggle('open');
+        });
+
+        navOverlay.addEventListener('click', (e) => {
+            if(e.target.tagName === 'A') {
+                menuBurger.classList.remove('open');
+                navOverlay.classList.remove('open');
+            }
+        });
+
+        // 2. DICTIONNAIRE DES TRADUCTIONS
+        const translations = {
+            fr: {
+                dir: "ltr",
+                menu_home: "Accueil", menu_programs: "Nos Programmes", menu_about: "À Propos", menu_contact: "Contact",
+                heroTitle: "Le soutien scolaire et les langues, <span>sans frontières</span>",
+                heroDesc: "Connectez-vous avec des tuteurs certifiés bilingues. Conçu pour fonctionner de manière fluide sur les réseaux à haut débit (Visioconférence standard) comme sur les réseaux à bande passante ultra-limitée (Appels et notes vocales WhatsApp).",
+                btnMainCta: "Commencer l'expérience", btnSecCta: "Découvrir nos programmes",
+                pillarsTitle: "Trois Piliers Adaptés à Chaque Réalité",
+                p1Title: "L'École en Ligne",
+                p1Desc: "Un véritable cursus complet, structuré et interactif en langues et matières fondamentales. Une alternative robuste conçue pour les familles à la recherche d'un programme officiel et d'un suivi scolaire rigoureux.",
+                p2Title: "Soutien Scolaire",
+                p2Desc: "Un accompagnement ciblé et personnalisé après les cours pour surmonter les difficultés, consolider les bases académiques, préparer sereinement les examens et progresser à son propre rythme.",
+                p3Title: "Blog & Vlog",
+                p3Desc: "Contenus pédagogiques multimédias, capsules vidéos courtes et astuces d'apprentissage synchronisables en basse résolution pour rester accessibles partout et à tout moment.",
+                formTitle: "Rejoindre la Passerelle",
+                formSubtitle: "Une interface unifiée. Dites-nous qui vous êtes, l'algorithme adapte instantanément vos options.",
+                labelProfile: "Votre Profil", btnEleve: "Je suis Élève / Parent", btnEnseignant: "Je souhaite Enseigner",
+                labelName: "Nom Complet", labelContact: "Adresse E-mail ou Numéro WhatsApp",
+                labelBesoinEleve: "Votre Besoin Prioritaire", labelBesoinProf: "Votre Spécialité Globale",
+                btnSubmitForm: "Valider ma demande de mise en relation",
+                footerText: "Créé par l'agence",
+                optionsEleve: [
+                    { value: "langues", text: "Apprentissage d'une langue" },
+                    { value: "soutien", text: "Soutien scolaire après les cours" },
+                    { value: "ief", text: "Accompagnement École en ligne / Cursus complet" }
+                ],
+                optionsProf: [
+                    { value: "disp-langues", text: "Enseignement des langues" },
+                    { value: "disp-soutien", text: "Tuteur Soutien Scolaire académique" },
+                    { value: "disp-all", text: "Polyvalent (Langues & Cursus complet)" }
+                ]
+            },
+            en: {
+                dir: "ltr",
+                menu_home: "Home", menu_programs: "Our Programs", menu_about: "About Us", menu_contact: "Contact",
+                heroTitle: "Tutoring and languages, <span>without borders</span>",
+                heroDesc: "Connect with certified bilingual tutors. Designed to work seamlessly on high-speed networks (Standard videoconferencing) as well as ultra-limited bandwidth networks (WhatsApp calls and voice notes).",
+                btnMainCta: "Start the experience", btnSecCta: "Discover our programs",
+                pillarsTitle: "Three Pillars Adapted to Every Reality",
+                p1Title: "Online School",
+                p1Desc: "A true comprehensive, structured, and interactive curriculum in languages and core subjects. A robust alternative designed for families seeking an official program and rigorous academic tracking.",
+                p2Title: "Academic Tutoring",
+                p2Desc: "Targeted and personalized after-school support to overcome difficulties, consolidate academic foundations, confidently prepare for exams, and progress at one's own pace.",
+                p3Title: "Blog & Vlog",
+                p3Desc: "Multimedia educational content, short video capsules, and learning tips synchronizable in low resolution to remain accessible anywhere and anytime.",
+                formTitle: "Join the Bridge",
+                formSubtitle: "A unified interface. Tell us who you are, the algorithm instantly adapts your options.",
+                labelProfile: "Your Profile", btnEleve: "I am a Student / Parent", btnEnseignant: "I want to Teach",
+                labelName: "Full Name", labelContact: "Email Address or WhatsApp Number",
+                labelBesoinEleve: "Your Priority Need", labelBesoinProf: "Your Overall Specialty",
+                btnSubmitForm: "Validate my matching request",
+                footerText: "Created by the agency",
+                optionsEleve: [
+                    { value: "langues", text: "Language learning" },
+                    { value: "soutien", text: "After-school academic tutoring" },
+                    { value: "ief", text: "Online School / Full Curriculum Support" }
+                ],
+                optionsProf: [
+                    { value: "disp-langues", text: "Language teaching" },
+                    { value: "disp-soutien", text: "Academic Support Tutor" },
+                    { value: "disp-all", text: "Versatile (Languages & Full Curriculum)" }
+                ]
+            },
+            ar: {
+                dir: "rtl",
+                menu_home: "الرئيسية", menu_programs: "برامجنا", menu_about: "من نحن", menu_contact: "اتصل بنا",
+                heroTitle: "الدعم المدرسي واللغات، <span>بلا حدود</span>",
+                heroDesc: "تواصل مع معلمين ثنائيي اللغة ومعتمدين. مصمم ليعمل بسلاسة على الشبكات عالية السرعة (الفيديو العادي) وكذلك على الشبكات ذات النطاق الترددي المحدود للغاية (مكالمات ورسائل واتساب الصوتية).",
+                btnMainCta: "ابدأ التجربة", btnSecCta: "اكتشف برامجنا",
+                pillarsTitle: "ثلاثة ركائز تتكيف مع كل واقع",
+                p1Title: "المدرسة عبر الإنترنت",
+                p1Desc: "منهج دراسي كامل، منظم وتفاعلي في اللغات والمواد الأساسية. بديل قوي مصمم للعائلات التي تبحث عن برنامج رسمي ومتابعة مدرسية صارمة.",
+                p2Title: "الدعم المدرسي",
+                p2Desc: "دعم مستهدف ومخصص بعد المدرسة للتغلب على الصعوبات، وتعزيز الأسس الأكاديمية، والتحضير للامتحانات بكل ثقة، والتقدم بالوتيرة الخاصة بالطالب.",
+                p3Title: "المدونة والفلوغ",
+                p3Desc: "محتوى تعليمي متعدد الوسائط، ومقاطع فيديو قصيرة، ونصائح تعليمية قابلة للمزامنة بدقة منخفضة لتبقى متاحة في أي مكان وفي أي وقت.",
+                formTitle: "الانضمام إلى الجسر",
+                formSubtitle: "واجهة موحدة. أخبرنا من أنت، وسيقوم النظام بتكييف خياراتك على الفور.",
+                labelProfile: "ملفك الشخصي", btnEleve: "أنا طالب / ولي أمر", btnEnseignant: "أرغب في التدريس",
+                labelName: "الاسم الكامل", labelContact: "البريد الإلكتروني أو رقم الواتساب",
+                labelBesoinEleve: "حاجتك ذات الأولوية", labelBesoinProf: "تخصصك العام",
+                btnSubmitForm: "تأكيد طلب التواصل",
+                footerText: "تم التطوير بواسطة وكالة",
+                optionsEleve: [
+                    { value: "langues", text: "تعلم لغة" },
+                    { value: "soutien", text: "الدعم المدرسي بعد المدرسة" },
+                    { value: "ief", text: "المدرسة عبر الإنترنت / دعم المنهج الكامل" }
+                ],
+                optionsProf: [
+                    { value: "disp-langues", text: "تدريس اللغات" },
+                    { value: "disp-soutien", text: "مدرس دعم أكاديمي" },
+                    { value: "disp-all", text: "متعدد التخصصات (لغات ومنهج كامل)" }
+                ]
+            }
+        };
+
+        // 3. LOGIQUE D'ACTUALISATION DE LA LANGUE
+        const langSelect = document.getElementById('langSelect');
+        const btnEleve = document.getElementById('btnEleve');
+        const btnEnseignant = document.getElementById('btnEnseignant');
+        const besoinSelect = document.getElementById('besoin');
+        const labelBesoin = document.getElementById('labelBesoin');
+
+        function updateLanguage(lang) {
+            const data = translations[lang];
+            
+            // Set RTL/LTR direction attributes
+            document.body.setAttribute('dir', data.dir);
+
+            // Update Static Content
+            document.getElementById('heroTitle').innerHTML = data.heroTitle;
+            document.getElementById('heroDesc').innerText = data.heroDesc;
+            document.getElementById('btnMainCta').innerText = data.btnMainCta;
+            document.getElementById('btnSecCta').innerText = data.btnSecCta;
+            document.getElementById('pillarsTitle').innerText = data.pillarsTitle;
+            document.getElementById('p1Title').innerText = data.p1Title;
+            document.getElementById('p1Desc').innerText = data.p1Desc;
+            document.getElementById('p2Title').innerText = data.p2Title;
+            document.getElementById('p2Desc').innerText = data.p2Desc;
+            document.getElementById('p3Title').innerText = data.p3Title;
+            document.getElementById('p3Desc').innerText = data.p3Desc;
+            document.getElementById('formTitle').innerText = data.formTitle;
+            document.getElementById('formSubtitle').innerText = data.formSubtitle;
+            document.getElementById('labelProfile').innerText = data.labelProfile;
+            document.getElementById('nomComplet').placeholder = lang === 'ar' ? "مثال: أحمد محمد" : (lang === 'en' ? "Ex: John Doe" : "Ex: Thomas Martin");
+            
+            btnEleve.innerText = data.btnEleve;
+            btnEnseignant.innerText = data.btnEnseignant;
+            document.getElementById('labelName').innerText = data.labelName;
+            document.getElementById('labelContact').innerText = data.labelContact;
+            document.getElementById('btnSubmitForm').innerText = data.btnSubmitForm;
+            document.getElementById('footerText').innerText = data.footerText;
+
+            // Overlay Navigation Links
+            document.querySelector('.nav-link-1').innerText = data.menu_home;
+            document.querySelector('.nav-link-2').innerText = data.menu_programs;
+            document.querySelector('.nav-link-3').innerText = data.menu_about;
+            document.querySelector('.nav-link-4').innerText = data.menu_contact;
+
+            // Update Select Dropdown
+            updateDropdownOptions();
+        }
+
+        function updateDropdownOptions() {
+            const currentLang = langSelect.value;
+            const isEleve = btnEleve.classList.contains('active');
+            const data = translations[currentLang];
+
+            if (isEleve) {
+                labelBesoin.innerText = data.labelBesoinEleve;
+                besoinSelect.innerHTML = data.optionsEleve.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+            } else {
+                labelBesoin.innerText = data.labelBesoinProf;
+                besoinSelect.innerHTML = data.optionsProf.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+            }
+        }
+
+        // 4. LISTENERS ET INITIALISATION
+        langSelect.addEventListener('change', (e) => updateLanguage(e.target.value));
+
+        btnEleve.addEventListener('click', () => {
+            btnEleve.classList.add('active');
+            btnEnseignant.classList.remove('active');
+            updateDropdownOptions();
+        });
+
+        btnEnseignant.addEventListener('click', () => {
+            btnEnseignant.classList.add('active');
+            btnEleve.classList.remove('active');
+            updateDropdownOptions();
+        });
+
+        // Lancement initial (Français par défaut)
+        updateLanguage('fr');
+    </script>
+</body>
+</html>
